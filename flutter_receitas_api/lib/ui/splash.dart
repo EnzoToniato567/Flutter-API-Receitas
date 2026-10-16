@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+
+import 'home.dart';
+
+class Splash extends StatefulWidget {
+  const Splash({super.key});
+
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
+  late AnimationController aumentar;
+  double tamanho = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    animacao();
+  }
+
+  void animacao() {
+    aumentar =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2))
+          ..addListener(() {
+            setState(() {
+              tamanho = aumentar.value;
+            });
+          });
+    aumentar.forward().then((value) {
+      if (mounted) irParaHome();
+    });
+  }
+
+  void irParaHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Home()),
+    );
+  }
+
+  @override
+  void dispose() {
+    aumentar.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Transform.scale(
+          scale: tamanho,
+          child: Image.asset("assets/icon.png", width: 300),
+        ),
+      ),
+    );
+  }
+}
